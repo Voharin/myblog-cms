@@ -26,5 +26,5 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/style.css">
 
-	<title>Blog CMS!</title>
+	
 </head>

@@ -23,7 +23,49 @@
 			<div class="row">
 				<main id="main" class="col-md-8">
 					<div class="row">
+
+					<?php
+							$sql = "SELECT * FROM posts";
+							$stmt1 = $conn->prepare($sql);
+							$stmt1->execute();
+
+							
+								while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+
+									$post_id = $row['post_id'];
+									$post_title = $row['post_title'];
+									$post_author = $row['post_author'];
+									$post_date = $row['post_date'];
+									$post_image = $row['post_image'];
+									$post_content = substr($row['post_content'], 0, 150);
+
+									echo "<div class='col-md-6'>";
+									echo "<div class='blog'>";
+									echo "<div class='blog-img'>";
+									echo "<img class='img-fluid' src='img/blog/$post_image' alt=''>";
+									echo "</div>"; // end of blog-img
+									echo "<div class='blog-content'>";
+									echo "<ul class='blog-meta'>";
+									echo "<li><i class='fa fa-user'></i>$post_author</li>";
+									echo "<li><i class='fa fa-clock-o'></i>$post_date</li>";
+									echo "</ul>"; // end of blog-meta
+									echo "<h3>$post_title</h3>";
+									echo "<p>$post_content</p>";
+									echo "<a href='post.php?p_id=$post_id' class='read-more'>Read More <i class='fa fa-long-arrow-right'></i></a>";
+									echo "</div>"; // end of blog-content
+									
+									
+									echo "</div>";  // blog
+									echo '</div>'; // col-md-6
+								}
+							
+
+							?>
+
 						<div class="col-md-6">
+
+			
+
 							<div class="blog">
 								<div class="blog-img">
 									<img src="img/blog1.jpg" class="img-fluid">
@@ -40,6 +82,9 @@
 								</div>
 							</div>
 						</div>
+
+
+
 						<div class="col-md-6">
 							<div class="blog">
 								<div class="blog-img">
@@ -57,40 +102,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="blog">
-								<div class="blog-img">
-									<img src="img/blog3.jpg" class="img-fluid">
-								</div>
-								<div class="blog-content">
-									<ul class="blog-meta">
-										<li><i class="fas fa-users"></i><span class="writer">John Doe</span></li>
-										<li><i class="fas fa-clock"></i><span class="writer">17 Dec 2018</span></li>
-										<li><i class="fas fa-comments"></i><span class="writer">13</span></li>
-									</ul>
-									<h3>Lorem Ipsum</h3>
-									<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-									<a href="blog-single.html">Read More</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="blog">
-								<div class="blog-img">
-									<img src="img/blog1.jpg" class="img-fluid">
-								</div>
-								<div class="blog-content">
-									<ul class="blog-meta">
-										<li><i class="fas fa-users"></i><span class="writer">John Doe</span></li>
-										<li><i class="fas fa-clock"></i><span class="writer">17 Dec 2018</span></li>
-										<li><i class="fas fa-comments"></i><span class="writer">13</span></li>
-									</ul>
-									<h3>Lorem Ipsum</h3>
-									<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-									<a href="blog-single.html">Read More</a>
-								</div>
-							</div>
-						</div>
+				
+
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
 								<li class="page-item disabled">
@@ -131,30 +144,31 @@
 							$stmt->execute();
 							$result = $stmt->fetchAll();
 
-						
 
-						 foreach ($result as $row) {
 
-								switch($row["cat_name"]){
+							foreach ($result as $row) {
+
+								switch ($row["cat_name"]) {
 									case "Web Programming":
 										echo "<a href='#'>" . $row['cat_name'] . "</a>";
 										break;
-										case "JavaScript":
-											echo "<a href='#'>" . $row['cat_name'] . "</a>";
-											break;
-											case "Mobile Programming":
-												echo "<a href='#'>" . $row['cat_name'] . "</a>";
-											break;
-										default:
-											echo "<a href='#'>" . $row['cat_name'] . "</a>";
-											break;}
+									case "JavaScript":
+										echo "<a href='#'>" . $row['cat_name'] . "</a>";
+										break;
+									case "Mobile Programming":
+										echo "<a href='#'>" . $row['cat_name'] . "</a>";
+										break;
+									default:
+										echo "<a href='#'>" . $row['cat_name'] . "</a>";
+										break;
 								}
+							}
 
-								
-							
-								
+
+
+
 							?>
-									
+
 
 							<!-- <a href="#">Web Design<span>(7)</span></a>
 							<a href="#">Marketing<span>(142)</span></a>
