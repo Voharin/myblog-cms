@@ -18,7 +18,7 @@
 	<!--==========================
     Contact Section
 ============================-->
-	<section id="blog" class="md-padding">
+	<section id="blog" class="md-paddi ng">
 		<div class="container">
 			<div class="row">
 				<main id="main" class="col-md-8">
@@ -96,7 +96,7 @@
 										<li><i class="fas fa-clock"></i><span class="writer">17 Dec 2018</span></li>
 										<li><i class="fas fa-comments"></i><span class="writer">13</span></li>
 									</ul>
-									<h3>Lorem Ipsum</h3>
+									<h3><?php echo $post_title ?></h3>
 									<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
 									<a href="blog-single.html">Read More</a>
 								</div>
