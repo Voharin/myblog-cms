@@ -66,7 +66,7 @@
                                 if(isset($_POST["add_category"])){
                                         $category_name = $_POST["category_name"];
                                 }
-                                if(!empty($category_name)){
+                                if(!empty($category_name) && strlen($category_name) > 3){
                                         $sql = "INSERT INTO categories (cat_name) VALUES (:category_name)";
                                         $result = $conn->prepare($sql);
                                         $result->bindParam(':category_name', $category_name);
