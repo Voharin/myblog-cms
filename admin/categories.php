@@ -49,37 +49,37 @@
                ";
                     } ?>
 
-                            <?php
-                            // if (isset($_POST['add_category'])) {
-                            //     $category_name = $_POST['category_name'];
-                            //     $sql = "INSERT INTO `categories` (cat_name) VALUES (:cat_name)";
-                            //     $result = $conn->prepare($sql);
-                            //     $result->bindParam(':cat_name', $cat_name);
-                            //     $result->execute();
-                            //     if ($result) {
-                            //         echo "<div class='alert alert-success'>Category Added Successfully</div>";
-                            //     } else {
-                            //         echo "<div class='alert alert-danger'>Category Not Added</div>";
-                            //     }
-                            // }
-                            
-                                if(isset($_POST["add_category"])){
-                                        $category_name = $_POST["category_name"];
-                                }
-                                if(!empty($category_name) && strlen($category_name) > 3){
-                                        $sql = "INSERT INTO categories (cat_name) VALUES (:category_name)";
-                                        $result = $conn->prepare($sql);
-                                        $result->bindParam(':category_name', $category_name);
-                                        $result->execute();
-                                        if($result){
-                                                echo "<div class='alert alert-success'>Category Added Successfully</div>";
-                                        }else{
-                                                echo "<div class='alert alert-danger'>Category Not Added</div>";
-                                        }
-                                }
+                    <?php
+                    // if (isset($_POST['add_category'])) {
+                    //     $category_name = $_POST['category_name'];
+                    //     $sql = "INSERT INTO `categories` (cat_name) VALUES (:cat_name)";
+                    //     $result = $conn->prepare($sql);
+                    //     $result->bindParam(':cat_name', $cat_name);
+                    //     $result->execute();
+                    //     if ($result) {
+                    //         echo "<div class='alert alert-success'>Category Added Successfully</div>";
+                    //     } else {
+                    //         echo "<div class='alert alert-danger'>Category Not Added</div>";
+                    //     }
+                    // }
 
-                            
-                            ?>
+                    if (isset($_POST["add_category"])) {
+                        $category_name = $_POST["category_name"];
+                    }
+                    if (!empty($category_name) && strlen($category_name) > 3) {
+                        $sql = "INSERT INTO categories (cat_name) VALUES (:category_name)";
+                        $result = $conn->prepare($sql);
+                        $result->bindParam(':category_name', $category_name);
+                        $result->execute();
+                        if ($result) {
+                            echo "<div class='alert alert-success'>Category Added Successfully</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Category Not Added</div>";
+                        }
+                    }
+
+
+                    ?>
 
                     <!--Modal -->
                     <div class="modal fade" id="modalAdding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -119,10 +119,11 @@
             <script src="js/owl.carousel.min.js"></script>
             <script src="js/main.js"></script>
 
-         <?php
-                {/**
+            <?php {
+                /**
                  * 
                  * 
-                 */}
-         
-         ?>
+                 */
+            }
+
+            ?>
