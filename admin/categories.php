@@ -19,37 +19,7 @@
                 </thead>
                 <tbody>
 
-                    <?php
-                    $sql = "SELECT * FROM categories";
-                    $result = $conn->prepare($sql);
-                    $result->execute();
-
-                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        // $categories[] = $row;
-                        $category_id = $row['id'];
-                        $category_name = $row['cat_name'];
-
-                        echo "<tr>
-                    <td>{$category_id}</td>
-                    <td>{$category_name}</td>
-                    <td>
-                    <div class='dropdown'>
-                    <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                      Actions
-                    </button>
-                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                      <a class='dropdown-item' href='#' data-toggle='modal' data-target='#modalAdding'>Add</a>
-                      <a class='dropdown-item' href='#'>Edit</a>
-                      <a class='dropdown-item' href='#'>Delete</a>
-                    </div>
-                  </div>
-                    </td>
-                </tr>
-                
-               ";
-                    } ?>
-
-                    <?php
+                <?php
                     // if (isset($_POST['add_category'])) {
                     //     $category_name = $_POST['category_name'];
                     //     $sql = "INSERT INTO `categories` (cat_name) VALUES (:cat_name)";
@@ -63,10 +33,13 @@
                     //     }
                     // }
 
+                                // Kategorileri ekleme 
+                                // Kategorinin önyüzden veritabanına eklenmesi
+
                     if (isset($_POST["add_category"])) {
                         $category_name = $_POST["category_name"];
                     }
-                    if (!empty($category_name) && strlen($category_name) > 3) {
+                    if (!empty($category_name) ) {
                         $sql = "INSERT INTO categories (cat_name) VALUES (:category_name)";
                         $result = $conn->prepare($sql);
                         $result->bindParam(':category_name', $category_name);
@@ -78,10 +51,78 @@
                         }
                     }
 
+                    //Kategori sil
+                            // if(isset($_POST["delete_category"])){
+                            //     $category_id = $_POST["category_id"];
+                            //     $sql = "DELETE FROM categories WHERE id = :category_id";
+                            //     $result = $conn->prepare($sql);
+                            //     $result->bindParam(':category_id', $category_id);
+                            //     $result->execute();
+                            //     if($result){
+                            //         echo "<div class='alert alert-success'>Category Deleted Successfully</div>";
+                            //     }else{
+                            //         echo "<div class='alert alert-danger'>Category Not Deleted</div>";
+                            //     }
+                            // }
 
                     ?>
 
-                    <!--Modal -->
+
+                    <?php
+                    $sql = "SELECT * FROM categories ORDER BY id DESC";
+                    $result = $conn->prepare($sql);
+                    $result->execute();
+
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        // $categories[] = $row;
+                        $category_id = $row['id'];
+                        $category_name = $row['cat_name'];
+
+                        echo "<tr>
+                    <td>{$category_id}</td>
+                    <td>{$category_name}</td>
+                    <td>
+
+                    <div class='btn-group' data-toggle='buttons'>
+                        <form action='' method='post'>
+                            <input type='hidden' name='category_id' value='{$category_id}'>
+                            <button type='submit' class='btn btn-danger' name='delete_category'>Delete</button>
+                        </form>
+                        
+                    <button class='btn btn-primary' name='add-category' data-toggle='modal' data-target='#modalAdding'> Add Category </button> 
+                 
+                    <button class='btn btn-warning'  name='edit-category' data-toggle='modal' data-target='#modalEditing'> Edit Category </button>
+                  
+                    
+
+
+                   
+                    
+                    </div>
+                  </div>
+                    </td>
+                </tr>
+                
+               ";
+                    } 
+                    
+                    if (isset($_POST['delete_category'])) {
+                        $category_did = $_POST['category_id'];
+                         $sql = "DELETE FROM categories WHERE id = :category_id";
+                        $result = $conn->prepare($sql);
+                     $result->bindParam(':category_id', $category_did);
+                         $result->execute(); }
+                    
+                    
+                    ?>
+
+                    <?php
+                    
+
+                    ?>
+
+                                                              <!--MODAL SECTION -->
+                                                              <!--Add Category Modal -->
                     <div class="modal fade" id="modalAdding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -92,7 +133,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="" method="POST">
+                                    <form action="<?php $_?>" method="POST">
                                         <div class="form-group">
                                             <label for="category_name">Kategori Adı</label>
                                             <input type="text" class="form-control" id="category_name" name="category_name">
