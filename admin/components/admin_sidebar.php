@@ -26,15 +26,22 @@
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link" href="../admin/tables.php">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
-        </li>
+          </li>
 
         <li class="nav-item">
           <a class="nav-link" href="../admin/categories.php">
           <i class="fa fa-list-alt " aria-hidden="true"></i>
             <span>Categories</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../admin/portfolios.php">
+          <i class="fa fa-user" aria-hidden="true"></i>
+
+            <span>Portfolio</span></a>
         </li>
       </ul>

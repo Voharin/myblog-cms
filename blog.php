@@ -24,47 +24,47 @@
 				<main id="main" class="col-md-8">
 					<div class="row">
 
-					<?php
-							$sql = "SELECT * FROM posts";
-							$stmt1 = $conn->prepare($sql);
-							$stmt1->execute();
+						<?php
+						$sql = "SELECT * FROM posts";
+						$stmt1 = $conn->prepare($sql);
+						$stmt1->execute();
 
-							
-								while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
 
-									$post_id = $row['post_id'];
-									$post_title = $row['post_title'];
-									$post_author = $row['post_author'];
-									$post_date = $row['post_date'];
-									$post_image = $row['post_image'];
-									$post_content = substr($row['post_content'], 0, 150);
+						while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
 
-									echo "<div class='col-md-6'>";
-									echo "<div class='blog'>";
-									echo "<div class='blog-img'>";
-									echo "<img class='img-fluid' src='img/blog/$post_image' alt=''>";
-									echo "</div>"; // end of blog-img
-									echo "<div class='blog-content'>";
-									echo "<ul class='blog-meta'>";
-									echo "<li><i class='fa fa-user'></i>$post_author</li>";
-									echo "<li><i class='fa fa-clock-o'></i>$post_date</li>";
-									echo "</ul>"; // end of blog-meta
-									echo "<h3>$post_title</h3>";
-									echo "<p>$post_content</p>";
-									echo "<a href='post.php?p_id=$post_id' class='read-more'>Read More <i class='fa fa-long-arrow-right'></i></a>";
-									echo "</div>"; // end of blog-content
-									
-									
-									echo "</div>";  // blog
-									echo '</div>'; // col-md-6
-								}
-							
+							$post_id = $row['post_id'];
+							$post_title = $row['post_title'];
+							$post_author = $row['post_author'];
+							$post_date = $row['post_date'];
+							$post_image = $row['post_image'];
+							$post_content = substr($row['post_content'], 0, 150);
 
-							?>
+							echo "<div class='col-md-6'>";
+							echo "<div class='blog'>";
+							echo "<div class='blog-img'>";
+							echo "<img class='img-fluid' src='img/blog/$post_image' alt=''>";
+							echo "</div>"; // end of blog-img
+							echo "<div class='blog-content'>";
+							echo "<ul class='blog-meta'>";
+							echo "<li><i class='fa fa-user'></i>$post_author</li>";
+							echo "<li><i class='fa fa-clock-o'></i>$post_date</li>";
+							echo "</ul>"; // end of blog-meta
+							echo "<h3>$post_title</h3>";
+							echo "<p>$post_content</p>";
+							echo "<a href='post.php?p_id=$post_id' class='read-more'>Read More <i class='fa fa-long-arrow-right'></i></a>";
+							echo "</div>"; // end of blog-content
+
+
+							echo "</div>";  // blog
+							echo '</div>'; // col-md-6
+						}
+
+
+						?>
 
 						<div class="col-md-6">
 
-			
+
 
 							<div class="blog">
 								<div class="blog-img">
@@ -102,7 +102,7 @@
 								</div>
 							</div>
 						</div>
-				
+
 
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">

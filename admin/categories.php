@@ -52,18 +52,19 @@
                     }
 
                     //Kategori sil
-                            // if(isset($_POST["delete_category"])){
-                            //     $category_id = $_POST["category_id"];
-                            //     $sql = "DELETE FROM categories WHERE id = :category_id";
-                            //     $result = $conn->prepare($sql);
-                            //     $result->bindParam(':category_id', $category_id);
-                            //     $result->execute();
-                            //     if($result){
-                            //         echo "<div class='alert alert-success'>Category Deleted Successfully</div>";
-                            //     }else{
-                            //         echo "<div class='alert alert-danger'>Category Not Deleted</div>";
-                            //     }
-                            // }
+                            if(isset($_GET["delete_category"])){
+                                echo $_GET["id"];
+                                $category_id = $_GET["category_id"];
+                                $sql = "DELETE FROM categories WHERE id = :category_id";
+                                $result = $conn->prepare($sql);
+                                $result->bindParam(':category_id', $category_id);
+                                $result->execute();
+                                if($result){
+                                    echo "<div class='alert alert-success'>Category Deleted Successfully</div>";
+                                }else{
+                                    echo "<div class='alert alert-danger'>Category Not Deleted</div>";
+                                }
+                            }
 
                     ?>
 
@@ -84,11 +85,9 @@
                     <td>
 
                     <div class='btn-group' data-toggle='buttons'>
-                        <form action='' method='post'>
-                            <input type='hidden' name='category_id' value='{$category_id}'>
-                            <button type='submit' class='btn btn-danger' name='delete_category'>Delete</button>
-                        </form>
-                        
+                       
+                    <a class='btn btn-danger' name='delete_category'  style ='color:white' href='categories.php?id={$category_id}'>Delete</a>
+                      
                     <button class='btn btn-primary' name='add-category' data-toggle='modal' data-target='#modalAdding'> Add Category </button> 
                  
                     <button class='btn btn-warning'  name='edit-category' data-toggle='modal' data-target='#modalEditing'> Edit Category </button>
