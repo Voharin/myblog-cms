@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>
 
-                <?php
+                    <?php
                     // if (isset($_POST['add_category'])) {
                     //     $category_name = $_POST['category_name'];
                     //     $sql = "INSERT INTO `categories` (cat_name) VALUES (:cat_name)";
@@ -33,13 +33,13 @@
                     //     }
                     // }
 
-                                // Kategorileri ekleme 
-                                // Kategorinin önyüzden veritabanına eklenmesi
+                    // Kategorileri ekleme 
+                    // Kategorinin önyüzden veritabanına eklenmesi
 
                     if (isset($_POST["add_category"])) {
                         $category_name = $_POST["category_name"];
                     }
-                    if (!empty($category_name) ) {
+                    if (!empty($category_name)) {
                         $sql = "INSERT INTO categories (cat_name) VALUES (:category_name)";
                         $result = $conn->prepare($sql);
                         $result->bindParam(':category_name', $category_name);
@@ -49,22 +49,24 @@
                         } else {
                             echo "<div class='alert alert-danger'>Category Not Added</div>";
                         }
+                        header("Refresh:2");
                     }
 
                     //Kategori sil
-                            if(isset($_GET["delete_category"])){
-                                echo $_GET["id"];
-                                $category_id = $_GET["category_id"];
-                                $sql = "DELETE FROM categories WHERE id = :category_id";
-                                $result = $conn->prepare($sql);
-                                $result->bindParam(':category_id', $category_id);
-                                $result->execute();
-                                if($result){
-                                    echo "<div class='alert alert-success'>Category Deleted Successfully</div>";
-                                }else{
-                                    echo "<div class='alert alert-danger'>Category Not Deleted</div>";
-                                }
-                            }
+                    if (isset($_GET["delete_category"])) {
+
+                        $category_id = $_GET["delete_category"];
+                        $sql = "DELETE FROM categories WHERE id = :category_id";
+                        $result = $conn->prepare($sql);
+                        $result->bindParam(':category_id', $category_id);
+                        $result->execute();
+                        if ($result) {
+                            echo "<div class='alert alert-success'>Category Deleted Successfully</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Category Not Deleted</div>";
+                        }
+                        header("Refresh:2");
+                    }
 
                     ?>
 
@@ -85,43 +87,26 @@
                     <td>
 
                     <div class='btn-group' data-toggle='buttons'>
-                       
-                    <a class='btn btn-danger' name='delete_category'  style ='color:white' href='categories.php?id={$category_id}'>Delete</a>
-                      
-                    <button class='btn btn-primary' name='add-category' data-toggle='modal' data-target='#modalAdding'> Add Category </button> 
-                 
+                  <!--<a href='categories.php?delete_category={$category_id}' name='delete_category' class='btn btn-danger'>Delete</a>-->  
                     <button class='btn btn-warning'  name='edit-category' data-toggle='modal' data-target='#modalEditing'> Edit Category </button>
-                  
-                    
-
-
-                   
-                    
+                    <button class='btn btn-primary' name='add-category' data-toggle='modal' data-target='#modalAdding'> Add Category </button> 
+                    <button class='btn btn-danger'  name='delete-category' data-toggle='modal' data-target='#modalDeleting'> Delete Category </button>
                     </div>
                   </div>
                     </td>
                 </tr>
                 
                ";
-                    } 
-                    
-                    if (isset($_POST['delete_category'])) {
-                        $category_did = $_POST['category_id'];
-                         $sql = "DELETE FROM categories WHERE id = :category_id";
-                        $result = $conn->prepare($sql);
-                     $result->bindParam(':category_id', $category_did);
-                         $result->execute(); }
-                    
-                    
+                    }
                     ?>
 
                     <?php
-                    
+
 
                     ?>
 
-                                                              <!--MODAL SECTION -->
-                                                              <!--Add Category Modal -->
+                    <!--MODAL SECTION -->
+                    <!--Add Category Modal -->
                     <div class="modal fade" id="modalAdding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -132,7 +117,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="<?php $_?>" method="POST">
+                                    <form action="<?php $_ ?>" method="POST">
                                         <div class="form-group">
                                             <label for="category_name">Kategori Adı</label>
                                             <input type="text" class="form-control" id="category_name" name="category_name">
@@ -148,6 +133,32 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Delete Category Modal -->
+                    <div class="modal fade" id="modalDeleting" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" >Kategori sil</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="<?php $_ ?>" method="GET">
+                                        <p> Kategoriyi gerçekten silmek istiyor musunuz?</p>
+                                        <a class="btn btn-primary" name="delete_category" href="categories.php?delete_category=<?php echo $category_id ?>">Sil</a>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                    <button type="button" class="btn btn-primary">Kaydet</button> -->
+                                </div>
+                            </div>
+                        </div>
+
+
 
                 </tbody>
             </table>

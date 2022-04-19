@@ -1,5 +1,5 @@
-<?php include "./components/admin_header.php"; ?>
-
+<?php include "../admin/components/admin_header.php"; ?>
+<?php include "./components/admin_navbar.php"; ?>
 <div id="wrapper">
 
     <?php include "./components/admin_sidebar.php"; ?>
@@ -27,19 +27,40 @@
                     if (isset($_POST["add_portfolio"])) {
                         $portfolio_name = $_POST["portfolio_name"];
                         $portfolio_category = $_POST["portfolio_category"];
-                        $portfolio_large_image = $_FILES["large_image"]["name"];
-                        $newImageName = uniqid() . $portfolio_large_image;
-                        $portfolio_large_image_temp = $_FILES["large_image"]["tmp_name"];
-                        $path = "../uploadedFiles/" . $newImageName; 
-                        move_uploaded_file($portfolio_large_image_temp, $path);
+                        $image = $_FILES["large_image"]; 
+                        $image_name = $image["name"];
+                        $image_tmp_name = $image["tmp_name"]; 
+                      //  $newImageName = uniqid() . $portfolio_large_image;
+                       // $portfolio_large_image_temp = $_FILES["large_image"]["tmp_name"];
+                        $path = "../uploadedFiles/$image_name";
+                        move_uploaded_file($image_tmp_name, $path);
+
+                      //  if (isset($_POST["portfolio_category_select"])) $portfolio_category=$category_name;
+
                         $query = "INSERT INTO portfolios(title, portfolio_category, large_image) ";
-                        $query .= "VALUES('{$portfolio_name}', '{$portfolio_category}', '{$portfolio_large_image}')";
+                        $query .= "VALUES('{$portfolio_name}', '{$portfolio_category}', '{$image_name}')";
+                        $result = $conn->prepare($query);
+                        $result->execute();
+                        header("Location: portfolios.php");
+                        echo " {$portfolio_name} {$portfolio_category} {$image_name}";
+                        print_r($image);
+                        echo "hello";
+                    }
+
+                    ?>
+
+                    <!-- Delete Portfolio details from DB -->
+                    <?php 
+                    if (isset($_GET["delete"])) {
+                        $id = $_GET["delete"];
+                        $query = "DELETE FROM portfolios WHERE id = {$id}";
                         $result = $conn->prepare($query);
                         $result->execute();
                         header("Location: portfolios.php");
                     }
 
                     ?>
+
 
 
 
@@ -70,7 +91,7 @@
                             <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
                                 <a class='dropdown-item' data-toggle='modal' data-target='#edit_modal' href='#'>Edit</a>
                                 <div class='dropdown-divider'></div>
-                                <a class='dropdown-item' href='#'>Delete</a>
+                                <a class='dropdown-item' href='portfolios.php?delete={$portfolio_id}'>Delete</a>
                                 <div class='dropdown-divider'></div>
                                 <a class='dropdown-item' data-toggle='modal' data-target='#add_modal'>Add</a>
                             </div>
@@ -80,6 +101,8 @@
                     }
 
                     ?>
+                                <!-- Edit Modal -->
+
                     <div id="edit_modal" class="modal fade">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -101,14 +124,10 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="portfolio_image_sm">Small Image</label>
+                                            <label for="portfolio_image_sm"> Image </label>
                                             <input type="file" class="form-control" name="image">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="portfolio_image_bg">Big Image</label>
-                                            <input type="file" class="form-control" name="imagebg">
-                                        </div>
                                         <div class="form-group">
                                             <input type="hidden" name="category_id" value="">
                                             <input type="submit" class="btn btn-primary" name="edit_portfolio" value="Edit Portfolio">
@@ -120,7 +139,7 @@
                     </div>
                 </tbody>
             </table>
-
+                <!-- Add Modal -->
             <div id="add_modal" class="modal fade">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -131,7 +150,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="post">
+                            <form action="" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="portfolio_name">Product Name</label>
                                     <input type="text" class="form-control" name="portfolio_name">
@@ -140,9 +159,24 @@
                                     <label for="portfolio_category">Portfolio Category</label>
                                     <input type="text" class="form-control" name="portfolio_category">
                                 </div>
+                                    
 
                                 <div class="form-group">
+                                    <select class="custom-select form-control" name="portfolio_category_select">
+                                        <?php 
+                                        
+                                        $getCategories = $conn->prepare("SELECT * FROM categories");
+                                        $getCategories->execute();
 
+                                        while ($categories = $getCategories->fetch(PDO::FETCH_ASSOC)) {
+                                            $category_id = $categories['id'];
+                                            $category_name = $categories['cat_name'];
+                                            echo "<option style='color:blue;' value='$category_id'>$category_name</option>";
+                                        }
+
+                                        ?>
+                                      
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -150,7 +184,7 @@
                                     <input type="file" class="form-control" name="large_image">
                                 </div>
                                 <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" name="add_portfolio" value="Add Portfolio">
+                                    <input type="submit" class="btn btn-success" name="add_portfolio" value="Add Portfolio">
                                 </div>
                             </form>
                         </div>
