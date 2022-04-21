@@ -44,4 +44,12 @@
 
             <span>Portfolio</span></a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="../admin/posts.php">
+          <i class="far fa-clipboard" aria-hidden="true"></i>
+
+            <span>Posts</span></a>
+        </li>
+
       </ul>

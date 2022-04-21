@@ -158,8 +158,6 @@
                             </div>
                         </div>
 
-
-
                 </tbody>
             </table>
             <?php include "./components/admin_footer.php"; ?>
