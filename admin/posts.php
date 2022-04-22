@@ -27,13 +27,87 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Veritabanına veri ekleme -->
+                    <?php      
+                    if (isset($_POST["add_post"])) {
+                        $post_title = $_POST["post_title"];
+                    
+                        echo $_POST["post_image"];
+                        $post_category = $_POST["post_category"];
+                        $post_author = $_POST["post_author"];
+                        $post_date = date("Y-m-d");
+                        if(array_key_exists("post_image", $_FILES)){
+                            echo "ifdeyim!";
+                            $post_image = $_FILES["post_image"]["name"];
+                            $post_image_temp = $_FILES["post_image"]["tmp_name"];
+                            move_uploaded_file($post_image_temp, "../uploadedFiles/$post_image");
+
+                        }
+ 
+                        $post_content = $_POST["post_text"];
+                        $post_tags = $_POST["post_tags"];
+                        $post_comment_count = 0;
+
+                        $sql = "INSERT INTO posts ( post_category, post_title,  post_author, post_date, post_image, post_content, post_comment, post_tags) VALUES ( $post_category, $post_title, $post_author, now(), $post_image, $post_content, $post_tags, $post_comment_count)";
+                        $result = $conn->prepare($sql);
+                        $result->execute(); 
+                        if ($result) {
+                            echo "<div class='alert alert-success'>Post Added</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Post Not Added</div>";
+                        }
+                        header("Refresh:2"); }
+                    ?>
+
+                       <!-- Veritabanından veri silme -->
+                       <?php if (isset($_GET["delete"])) {
+                        echo "delete";
+                        $post_id = $_GET["delete"];
+                        $sql = "DELETE FROM posts WHERE post_id = {$post_id}";
+                        $result = $conn->prepare($sql);
+                        $result->execute();
+                        if ($result) {
+                            echo "<div class='alert alert-success'>Post Deleted</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Post Not Deleted</div>";
+                        }
+                        header("Refresh:2");
+                    } 
+                    ?>
+
+                    <!-- Veritabanından veri güncelleme -->
+
+                    <?php
+                    if (isset($_POST["update_post"])) {
+                        $post_id = $_POST["post_id"];
+                        $post_title = $_POST["post_title"];
+                        $post_category = $_POST["post_category"];
+                        $post_author = $_POST["post_author"];
+                        $post_date = date("Y-m-d");
+                        $post_image = $_POST["post_image"];
+                        $post_content = $_POST["post_text"];
+                        $post_tags = $_POST["post_tags"];
+                        $post_comment_count = 0;
+
+                        $sql = "UPDATE posts SET post_category = $post_category, post_title = $post_title, post_author = $post_author, post_date = $post_date, post_image = $post_image, post_content = $post_content, post_comment = $post_comment_count, post_tags = $post_tags WHERE post_id = $post_id";
+                        $result = $conn->prepare($sql);
+                        $result->execute();
+                        if ($result) {
+                            echo "<div class='alert alert-success'>Post Updated</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Post Not Updated</div>";
+                        }
+                        header("Refresh:2");
+                    }
+                    
+                    ?>
 
                     <!-- Verileri veritabanından çekme -->
                     <?php
                     $sql = "SELECT * FROM posts ORDER BY post_id DESC";
                     $result = $conn->prepare($sql);
                     $result->execute();
-
+                        $k=1;
                     while ($posts = $result->fetch(PDO::FETCH_ASSOC)) {
                         $post_id = $posts["post_id"];
                         $post_title = $posts["post_title"];
@@ -60,57 +134,20 @@
                             Actions
                         </button>
                         <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <a class='dropdown-item' data-toggle='modal' data-target='#edit_modal' href='#'>Edit</a>
+                            <a class='dropdown-item' data-toggle='modal' data-target='#edit_modal$k' >Edit</a>
                             <div class='dropdown-divider'></div>
-                            <a class='dropdown-item' href='#'>Delete</a>
+                            <a class='dropdown-item' href='posts.php?delete={$post_id}'>Delete</a>
                             <div class='dropdown-divider'></div>
                             <a class='dropdown-item' data-toggle='modal' data-target='#add_modal'>Add</a>
                         </div>
                     </div>
                 </td>
             </tr>";
-                    }
+                
                     ?>
-                    <!-- Veritabanına veri ekleme -->
-                    <?php
-
-                            
-                    if (isset($_POST["add_post"])) {
-                        $post_title = $_POST["post_title"];
-                    
-                        echo $_POST["post_image"];
-                        $post_category = $_POST["post_category"];
-                        $post_author = $_POST["post_author"];
-                        $post_date = date("Y-m-d");
-                        if(array_key_exists("post_image", $_FILES)){
-                            echo "ifdeyim!";
-                            $post_image = $_FILES["post_image"]["name"];
-                            $post_image_temp = $_FILES["post_image"]["tmp_name"];
-                            move_uploaded_file($post_image_temp, "../uploadedFiles/$post_image");
-
-                        }
- 
-                        $post_content = $_POST["post_text"];
-                        $post_tags = $_POST["post_tags"];
-                        $post_comment_count = 0;
-
-                        $sql = "INSERT INTO posts ( post_category, post_title,  post_author, post_date, post_image, post_content, post_comment, post_tags) VALUES ( $post_category, $post_title, $post_author, $post_date, $post_image, $post_content, $post_tags, $post_comment_count)";
-                        $result = $conn->prepare($sql);
-                        $result->execute(); 
-                        if ($result) {
-                            echo "<div class='alert alert-success'>Post Added</div>";
-                        } else {
-                            echo "<div class='alert alert-danger'>Post Not Added</div>";
-                        }
-                        header("Refresh:2");
-                    
-
-                    ?>
-
-
                     <!-- Edit Modal -->
 
-                    <div id="edit_modal" class="modal fade" >
+                    <div id="edit_modal<?php echo $k ?>" class="modal fade" >
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -149,14 +186,14 @@
 
                                         <div class="form-group">
                                             <input type="hidden" name="post_id" value="">
-                                            <input type="submit" class="btn btn-primary" name="edit_post" value="Edit Post">
+                                            <input type="submit" class="btn btn-primary" name="update_post" value="Update Post">
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                            <?php } ?>
+                            <?php $k++; } //while closes ?>
 
 
                     <!-- Add Modal -->
@@ -208,12 +245,8 @@
                             </div>
                         </div>
                     </div>
-
-
                 </tbody>
             </table>
-
-
 
             <?php include "./components/admin_footer.php"; ?>
 

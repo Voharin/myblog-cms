@@ -36,19 +36,18 @@
 
                     $portfolio_id = $row['id'];
                     $portfolio_title = $row['title'];
-                    $portfolio_image_thumb = $row['small_image'];
                     $portfolio_image_large = $row['large_image'];
                     $portfolio_category = $row['portfolio_category'];
 
                     echo "
                     
                        <div class='col-md-4 col-sm-6 portfolio-item'>
-                           <a href='img/{$portfolio_image_large}' class='portfolio-link' data-lightbox='{$portfolio_category}' data-title='{$portfolio_title}' >
+                           <a href='./uploadedFiles/{$portfolio_image_large}' class='portfolio-link' data-lightbox='{$portfolio_category}' data-title='{$portfolio_title}' >
                                <div class='portfolio-hover'>
                                    <div class='portfolio-hover-content'>
                                    </div>
                                </div>
-                               <img class='img-fluid' src='img/{$portfolio_image_thumb}' alt='>
+                               <img class='img-fluid' src='./uploadedFiles/{$portfolio_image_large}' alt='>
                            </a>
                            <div class='portfolio-caption'>
                                <h4>{$portfolio_title}</h4>
@@ -57,8 +56,6 @@
                    
                        ";
                 }
-
-
 
                 ?>
             </div>

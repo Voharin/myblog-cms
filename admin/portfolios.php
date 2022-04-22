@@ -52,6 +52,7 @@
                     <!-- Delete Portfolio details from DB -->
                     <?php 
                     if (isset($_GET["delete"])) {
+                        echo "delete";
                         $id = $_GET["delete"];
                         $query = "DELETE FROM portfolios WHERE id = {$id}";
                         $result = $conn->prepare($query);
@@ -60,8 +61,6 @@
                     }
 
                     ?>
-
-
 
 
                     <!-- fetch portfolios table  -->
