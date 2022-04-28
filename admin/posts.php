@@ -32,13 +32,14 @@
                     if (isset($_POST["add_post"])) {
                         $post_title = $_POST["post_title"];
                     
-                        echo $_POST["post_image"];
+                       
                         $post_category = $_POST["post_category"];
                         $post_author = $_POST["post_author"];
                         $post_date = date("Y-m-d");
                         if(array_key_exists("post_image", $_FILES)){
                             echo "ifdeyim!";
                             $post_image = $_FILES["post_image"]["name"];
+                            echo $post_image;
                             $post_image_temp = $_FILES["post_image"]["tmp_name"];
                             move_uploaded_file($post_image_temp, "../uploadedFiles/$post_image");
 
@@ -48,7 +49,8 @@
                         $post_tags = $_POST["post_tags"];
                         $post_comment_count = 0;
 
-                        $sql = "INSERT INTO posts ( post_category, post_title,  post_author, post_date, post_image, post_content, post_comment, post_tags) VALUES ( $post_category, $post_title, $post_author, now(), $post_image, $post_content, $post_tags, $post_comment_count)";
+                        $sql = "INSERT INTO posts ( post_category, post_title,  post_author, post_date, post_image, post_content, post_comment, post_tags) VALUES ( $post_category, $post_title, $post_author, now(), $post_image, $post_content, $post_comment_count,  $post_tags)";
+                        echo $sql;
                         $result = $conn->prepare($sql);
                         $result->execute(); 
                         if ($result) {
@@ -75,23 +77,32 @@
                     } 
                     ?>
 
-                    <!-- Veritabanından veri güncelleme -->
+                    <!-- Veritabanında veri güncelleme -->
 
                     <?php
                     if (isset($_POST["update_post"])) {
-                        $post_id = $_POST["post_id"];
+                         $post_ids = $_POST['id_value'];
+                         echo $post_ids;
+                    
                         $post_title = $_POST["post_title"];
                         $post_category = $_POST["post_category"];
                         $post_author = $_POST["post_author"];
                         $post_date = date("Y-m-d");
-                        $post_image = $_POST["post_image"];
+                        // $post_image = $_POST["post_image"];
+                        $post_image= $_FILES["post_image"]["name"];
+                        $post_image_temp = $_FILES["post_image"]["tmp_name"];
                         $post_content = $_POST["post_text"];
                         $post_tags = $_POST["post_tags"];
                         $post_comment_count = 0;
 
-                        $sql = "UPDATE posts SET post_category = $post_category, post_title = $post_title, post_author = $post_author, post_date = $post_date, post_image = $post_image, post_content = $post_content, post_comment = $post_comment_count, post_tags = $post_tags WHERE post_id = $post_id";
+                        move_uploaded_file($post_image_temp, "../uploadedFiles/$post_image");
+
+                        $sql = "UPDATE posts SET  post_title = '$post_title', post_author = '$post_author', post_date = '$post_date', post_image = '$post_image', post_content = '$post_content', post_comment = '$post_comment_count', post_tags = '$post_tags' WHERE post_id = $post_ids";
+                        echo $sql;
                         $result = $conn->prepare($sql);
                         $result->execute();
+
+
                         if ($result) {
                             echo "<div class='alert alert-success'>Post Updated</div>";
                         } else {
@@ -109,7 +120,11 @@
                     $result->execute();
                         $k=1;
                     while ($posts = $result->fetch(PDO::FETCH_ASSOC)) {
+                    //   $posted=  print_r($posts)."<br>";
+                    //  $posted_json= json_encode($posted);
+                    //  echo "posted is: ".$posted_json ";<br>";
                         $post_id = $posts["post_id"];
+                       // echo $post_id;
                         $post_title = $posts["post_title"];
                         $post_category_id = $posts["post_category_id"];
                         $post_author = $posts["post_author"];
@@ -118,6 +133,19 @@
                         $post_content = substr($posts["post_content"], 0, 140);
                         $post_tags = $posts["post_tags"];
                         $post_comment_count = $posts["post_comment"];
+
+                     //   move_uploaded_file($post_image_temp, "../uploadedFiles/$post_image");
+
+                        if(empty($post_image)){
+                           $query = "SELECT * FROM posts WHERE post_id = '$_POST[post_id]'"; 
+                           $select_image = $conn->prepare($query);
+                           $select_image->execute();
+
+                           while($row = $select_image->fetch(PDO::FETCH_ASSOC)){
+                               $post_image = $row["post_image"];
+                           }
+                        }
+
                         echo " <tr>
                 <td>{$post_id}</td>
                 <td>{$post_title}</td>
@@ -134,7 +162,7 @@
                             Actions
                         </button>
                         <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <a class='dropdown-item' data-toggle='modal' data-target='#edit_modal$k' >Edit</a>
+                            <a class='dropdown-item' data-toggle='modal' data-target='#edit_modal$post_id' >Edit</a>
                             <div class='dropdown-divider'></div>
                             <a class='dropdown-item' href='posts.php?delete={$post_id}'>Delete</a>
                             <div class='dropdown-divider'></div>
@@ -147,7 +175,7 @@
                     ?>
                     <!-- Edit Modal -->
 
-                    <div id="edit_modal<?php echo $k ?>" class="modal fade" >
+                    <div id="edit_modal<?php echo $post_id ?>" class="modal fade" >
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -158,6 +186,11 @@
                                 </div>
                                 <div class="modal-body">
                                     <form action="" method="post" enctype="multipart/form-data"> 
+                                    <div class="form-group">
+                                            <label for="post_id">Post id</label>
+                                            <input type="hidden" class="form-control" name="post_id" disabled value="<?php echo $post_id ?>">
+                                            <a href="posts.php?post_id=<?php echo $post_id ?>"> <?php echo $post_id ?></a>
+                                        </div>
                                         <div class="form-group">
                                             <label for="post_title">Post Title</label>
                                             <input type="text" class="form-control" name="post_title">
@@ -173,7 +206,7 @@
 
                                         <div class="form-group">
                                             <label for="post_image">Post Image</label>
-                                            <input type="file" class="form-control" name="post_image">
+                                            <input type="file" class="form-control" name="post_image" />
                                         </div>
                                         <div class="form-group">
                                             <label for="post_tags">Post Tags</label>
@@ -186,7 +219,8 @@
 
                                         <div class="form-group">
                                             <input type="hidden" name="post_id" value="">
-                                            <input type="submit" class="btn btn-primary" name="update_post" value="Update Post">
+                                            <input type="submit" class="btn btn-primary" name="update_post" value="Gonder">
+                                            <input type="hidden" class="btn btn-primary" name="id_value" value="<?php echo $post_id ?>">
                                         </div>
                                     </form>
                                 </div>
